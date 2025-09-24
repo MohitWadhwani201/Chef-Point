@@ -15,19 +15,19 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
-  "browserslist": {
+ "browserslist": {
   "production": [
     ">0.2%",
     "not dead",
     "not op_mini all",
     "last 2 Chrome versions",
     "last 2 Firefox versions",
-    "last 2 Safari versions",
+    "last 2 Safari major versions",
     "last 2 Edge versions",
     "last 2 Opera versions",
-    "last 2 iOS Safari versions",
-    "last 2 Samsung Internet versions",
-    "chrome >= 110"  
+    "iOS >= 14",
+    "Android >= 8",
+    "last 2 Samsung versions"
   ],
   "development": [
     "last 1 Chrome version",
@@ -37,5 +37,6 @@
     "last 1 Opera version"
   ]
 }
+
 
 }
