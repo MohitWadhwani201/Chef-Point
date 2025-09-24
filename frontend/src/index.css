@@ -408,19 +408,20 @@ ul.ingr-list > li {
 
 /* ===== NAVBAR ===== */
 .navbar {
-	background: var(--bg-card);
-	padding: 1rem clamp(1rem, 3vw, 2rem);
-	box-shadow: var(--shadow-light);
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	flex-wrap: wrap;
-	gap: 1rem;
-	position: sticky;
-	top: 0;
-	z-index: 1000;
-	backdrop-filter: blur(10px);
+  background: var(--bg-card);
+  padding: 1rem clamp(1rem, 3vw, 2rem);
+  box-shadow: var(--shadow-light);
+  display: flex;
+  justify-content: center; /* ⬅️ instead of space-between */
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 2rem; /* add a bit of space */
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  backdrop-filter: blur(10px);
 }
+
 
 .navbar-brand {
 	font-size: 1.5rem;
@@ -432,11 +433,13 @@ ul.ingr-list > li {
 }
 
 .navbar-content {
-	display: flex;
-	align-items: center;
-	gap: 2rem; /* Proper spacing between nav and user section */
-	flex-wrap: wrap;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+  justify-content: center; /* ⬅️ center items as well */
 }
+
 
 .navbar-nav {
 	display: flex;
