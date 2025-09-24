@@ -1,109 +1,58 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import ReactMarkdown from 'react-markdown';
+import { recipesApi } from '../api';
 
 function MyRecipes() {
   const [recipes, setRecipes] = useState([]);
-  const [editingRecipe, setEditingRecipe] = useState(null);
+  const [editing, setEditing] = useState(null);
   const [editedContent, setEditedContent] = useState('');
 
-  useEffect(() => {
-    fetchRecipes();
-  }, []);
+  useEffect(() => { fetchRecipes(); }, []);
 
   const fetchRecipes = async () => {
-    try {
-      const response = await axios.get('http://localhost:5000/api/recipes/my-recipes');
-      setRecipes(response.data);
-    } catch (error) {
-      console.error('Error fetching recipes:', error);
-    }
+    const response = await recipesApi.fetchMyRecipes();
+    setRecipes(response.data);
   };
 
   const deleteRecipe = async (id) => {
-    if (window.confirm('Are you sure you want to delete this recipe?')) {
-      try {
-        await axios.delete(`http://localhost:5000/api/recipes/${id}`);
-        fetchRecipes();
-      } catch (error) {
-        console.error('Error deleting recipe:', error);
-      }
-    }
+    if (!window.confirm('Are you sure?')) return;
+    await recipesApi.delete(id);
+    fetchRecipes();
   };
 
-  const startEditing = (recipe) => {
-    setEditingRecipe(recipe);
-    setEditedContent(recipe.editedContent || recipe.content);
-  };
-
-  const saveEdit = async () => {
-    try {
-      await axios.put(`http://localhost:5000/api/recipes/${editingRecipe._id}`, {
-        editedContent
-      });
-      setEditingRecipe(null);
-      fetchRecipes();
-    } catch (error) {
-      console.error('Error updating recipe:', error);
-    }
-  };
-
-  const cancelEdit = () => {
-    setEditingRecipe(null);
-    setEditedContent('');
-  };
+  const startEditing = (r) => { setEditing(r); setEditedContent(r.editedContent || r.content); };
+  const cancelEdit = () => { setEditing(null); setEditedContent(''); };
+  const saveEdit = async () => { await recipesApi.update(editing._id, editedContent); cancelEdit(); fetchRecipes(); };
 
   return (
     <div style={{ padding: '2rem' }}>
       <h1>My Saved Recipes</h1>
       <div className="recipe-list">
-        {recipes.map((recipe) => (
-          <div key={recipe._id} className="recipe-card">
-            {editingRecipe && editingRecipe._id === recipe._id ? (
-              <div>
-                <h3>Editing: {recipe.title}</h3>
-                <textarea
-                  className="recipe-editor"
-                  value={editedContent}
-                  onChange={(e) => setEditedContent(e.target.value)}
-                />
+        {recipes.map(r => (
+          <div key={r._id} className="recipe-card">
+            {editing && editing._id === r._id ? (
+              <>
+                <h3>Editing: {r.title}</h3>
+                <textarea className="recipe-editor" value={editedContent} onChange={(e) => setEditedContent(e.target.value)} />
                 <div className="recipe-actions">
-                  <button className="btn btn-primary" onClick={saveEdit}>
-                    Save Changes
-                  </button>
-                  <button className="btn btn-secondary" onClick={cancelEdit}>
-                    Cancel
-                  </button>
+                  <button className="btn btn-primary" onClick={saveEdit}>Save</button>
+                  <button className="btn btn-secondary" onClick={cancelEdit}>Cancel</button>
                 </div>
-              </div>
+              </>
             ) : (
-              <div>
-                <h3>{recipe.title}</h3>
-                <p><strong>Ingredients used:</strong> {recipe.ingredients.join(', ')}</p>
-                <ReactMarkdown>
-                  {recipe.editedContent || recipe.content}
-                </ReactMarkdown>
+              <>
+                <h3>{r.title}</h3>
+                <p><strong>Ingredients:</strong> {r.ingredients.join(', ')}</p>
+                <ReactMarkdown>{r.editedContent || r.content}</ReactMarkdown>
                 <div className="recipe-actions">
-                  <button 
-                    className="btn btn-primary"
-                    onClick={() => startEditing(recipe)}
-                  >
-                    Edit Recipe
-                  </button>
-                  <button 
-                    className="btn btn-secondary"
-                    onClick={() => deleteRecipe(recipe._id)}
-                  >
-                    Delete
-                  </button>
+                  <button className="btn btn-primary" onClick={() => startEditing(r)}>Edit</button>
+                  <button className="btn btn-secondary" onClick={() => deleteRecipe(r._id)}>Delete</button>
                 </div>
-              </div>
+              </>
             )}
           </div>
         ))}
-        {recipes.length === 0 && (
-          <p>No recipes saved yet. Generate some recipes to see them here!</p>
-        )}
+        {!recipes.length && <p>No recipes saved yet!</p>}
       </div>
     </div>
   );
