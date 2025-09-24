@@ -408,20 +408,19 @@ ul.ingr-list > li {
 
 /* ===== NAVBAR ===== */
 .navbar {
-  background: var(--bg-card);
-  padding: 1rem clamp(1rem, 3vw, 2rem);
-  box-shadow: var(--shadow-light);
-  display: flex;
-  justify-content: center; /* ⬅️ instead of space-between */
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 2rem; /* add a bit of space */
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-  backdrop-filter: blur(10px);
+	background: var(--bg-card);
+	padding: 1rem clamp(1rem, 3vw, 2rem);
+	box-shadow: var(--shadow-light);
+	display: flex;
+	justify-content: center; /* ⬅️ instead of space-between */
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 2rem; /* add a bit of space */
+	position: sticky;
+	top: 0;
+	z-index: 1000;
+	backdrop-filter: blur(10px);
 }
-
 
 .navbar-brand {
 	font-size: 1.5rem;
@@ -433,13 +432,12 @@ ul.ingr-list > li {
 }
 
 .navbar-content {
-  display: flex;
-  align-items: center;
-  gap: 2rem;
-  flex-wrap: wrap;
-  justify-content: center; /* ⬅️ center items as well */
+	display: flex;
+	align-items: center;
+	gap: 2rem;
+	flex-wrap: wrap;
+	justify-content: center; /* ⬅️ center items as well */
 }
-
 
 .navbar-nav {
 	display: flex;
@@ -449,8 +447,29 @@ ul.ingr-list > li {
 	padding: 0;
 	flex-wrap: wrap;
 }
+.navbar-mycomponent {
+  text-decoration: none;
+  color: var(--text-secondary);
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-sm);
+  transition: var(--transition);
+  font-weight: 500;
+  white-space: nowrap;
+  display: block;
+}
 
-.navbar-nav a {
+.navbar-mycomponent:hover {
+  background: var(--bg-element);
+  color: var(--text-primary);
+  transform: translateY(-1px);
+}
+
+/* For active state, you'll need to conditionally add active class */
+.navbar-mycomponent.active {
+  background: var(--primary);
+  color: var(--text-primary);
+}
+.navbar li span {
 	text-decoration: none;
 	color: var(--text-secondary);
 	padding: auto auto;
@@ -459,13 +478,6 @@ ul.ingr-list > li {
 	font-weight: 500;
 	white-space: nowrap; /* Prevents text wrapping */
 }
-
-.navbar-nav a:hover,
-.navbar-nav a.active {
-	background: var(--bg-element);
-	color: var(--text-primary);
-}
-
 .user-section {
 	display: flex;
 	align-items: center;
