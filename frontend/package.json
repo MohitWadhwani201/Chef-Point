@@ -1,0 +1,41 @@
+{
+  "name": "recipe-generator-frontend",
+  "type": "module",
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-scripts": "5.0.1",
+    "react-router-dom": "^6.15.0",
+    "axios": "^1.5.0",
+    "react-markdown": "^9.0.1"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "browserslist": {
+  "production": [
+    ">0.2%",
+    "not dead",
+    "not op_mini all",
+    "last 2 Chrome versions",
+    "last 2 Firefox versions",
+    "last 2 Safari versions",
+    "last 2 Edge versions",
+    "last 2 Opera versions",
+    "last 2 iOS Safari versions",
+    "last 2 Samsung Internet versions",
+    "chrome >= 110"  
+  ],
+  "development": [
+    "last 1 Chrome version",
+    "last 1 Firefox version",
+    "last 1 Safari version",
+    "last 1 Edge version",
+    "last 1 Opera version"
+  ]
+}
+
+}
