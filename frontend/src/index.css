@@ -450,7 +450,7 @@ ul.ingr-list > li {
 .navbar-nav a {
 	text-decoration: none;
 	color: var(--text-secondary);
-	padding: 0.5rem 1rem;
+	padding: auto auto;
 	border-radius: var(--radius-sm);
 	transition: var(--transition);
 	font-weight: 500;
