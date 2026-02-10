@@ -12,8 +12,8 @@ dotenv.config();
 const app = express();
 
 const allowedOrigins = [
-  process.env.FRONTEND_URL, // e.g., https://chef-point-frontend.onrender.com
-  "http://localhost:3000"
+  process.env.FRONTEND_URL // e.g., https://chef-point-frontend.onrender.com
+  
 ];
 
 app.use(
