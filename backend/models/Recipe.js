@@ -1,38 +1,56 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
-const recipeSchema = new mongoose.Schema({
-  title: {
-    type: String,
-    required: true,
-    trim: true
+const recipeSchema = new mongoose.Schema(
+  {
+    title: {
+      type: String,
+      required: true,
+      trim: true
+    },
+
+    ingredients: [
+      {
+        type: String,
+        required: true
+      }
+    ],
+
+    // 👇 HUMAN editable recipe
+    instructions: {
+      type: String,
+      required: true
+    },
+
+    // 👇 RAW AI JSON
+    content: {
+      type: String,
+      required: true
+    },
+
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true
+    },
+
+    isAiGenerated: {
+      type: Boolean,
+      default: true
+    },
+
+    editedContent: {
+      type: String,
+      default: ""
+    },
+
+    embedding: {
+      type: [Number],
+      default: []
+    }
   },
-  ingredients: [{
-    type: String,
-    required: true
-  }],
-  instructions: {
-    type: String,
-    required: true
-  },
-  content: {
-    type: String,
-    required: true
-  },
-  user: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
-  },
-  isAiGenerated: {
-    type: Boolean,
-    default: true
-  },
-  editedContent: {
-    type: String,
-    default: ''
+  {
+    timestamps: true
   }
-}, {
-  timestamps: true
-});
+);
 
-export default mongoose.model('Recipe', recipeSchema);
+export default mongoose.model("Recipe", recipeSchema);

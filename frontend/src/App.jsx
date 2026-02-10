@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import axios from 'axios';
 import Login from './components/Login.jsx';
 import Register from './components/Register.jsx';
 import RecipeGenerator from './components/RecipeGenerator.jsx';
@@ -17,23 +16,20 @@ function App() {
     
     if (token && userData) {
       setUser(JSON.parse(userData));
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     }
     setLoading(false);
   }, []);
 
   const login = (token, userData) => {
-    localStorage.setItem('token', token);
-    localStorage.setItem('user', JSON.stringify(userData));
-    setUser(userData);
-    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-  };
+  localStorage.setItem("token", token);
+  localStorage.setItem("user", JSON.stringify(userData));
+  setUser(userData);
+};
 
   const logout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     setUser(null);
-    delete axios.defaults.headers.common['Authorization'];
   };
 
   if (loading) {

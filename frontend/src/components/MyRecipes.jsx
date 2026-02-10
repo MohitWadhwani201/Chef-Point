@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import ReactMarkdown from 'react-markdown';
-import { recipesApi } from '../api';
+import React, { useState, useEffect } from "react";
+import { recipesApi } from "../api";
 
 function MyRecipes() {
   const [recipes, setRecipes] = useState([]);
   const [editing, setEditing] = useState(null);
-  const [editedContent, setEditedContent] = useState('');
-  const [loading, setLoading] = useState(false); // 👈 new state
+  const [editedContent, setEditedContent] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     fetchRecipes();
@@ -14,47 +14,61 @@ function MyRecipes() {
 
   const fetchRecipes = async () => {
     try {
-      setLoading(true); // 👈 start loading
+      setLoading(true);
       const response = await recipesApi.fetchMyRecipes();
       setRecipes(response.data);
-    } catch (error) {
-      console.error('Error fetching recipes:', error);
+    } catch (err) {
+      setError(err.response?.data?.message || err.message);
     } finally {
-      setLoading(false); // 👈 stop loading
+      setLoading(false);
     }
   };
 
   const deleteRecipe = async (id) => {
-    if (!window.confirm('Are you sure?')) return;
-    setLoading(true);
-    await recipesApi.delete(id);
-    await fetchRecipes();
+    if (!window.confirm("Are you sure?")) return;
+
+    try {
+      setLoading(true);
+      await recipesApi.delete(id);
+      await fetchRecipes();
+    } catch (err) {
+      setError(err.response?.data?.message || err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const startEditing = (r) => {
     setEditing(r);
-    setEditedContent(r.editedContent || r.content);
+    setEditedContent(r.editedContent || r.instructions); // ✅ FIX
   };
 
   const cancelEdit = () => {
     setEditing(null);
-    setEditedContent('');
+    setEditedContent("");
   };
 
   const saveEdit = async () => {
-    setLoading(true);
-    await recipesApi.update(editing._id, editedContent);
-    cancelEdit();
-    await fetchRecipes();
+    try {
+      setLoading(true);
+      await recipesApi.update(editing._id, editedContent);
+      cancelEdit();
+      await fetchRecipes();
+    } catch (err) {
+      setError(err.response?.data?.message || err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div style={{ padding: '2rem' }}>
+    <div style={{ padding: "2rem" }}>
       <h1>My Saved Recipes</h1>
 
-      {/* 👇 Show loading indicator */}
+      {error && <div className="error-message">{error}</div>}
+
       {loading ? (
-        <p style={{ fontStyle: 'italic', color: '#555' }}>Loading recipes...</p>
+        <p style={{ fontStyle: "italic", color: "#555" }}>Loading recipes...</p>
       ) : (
         <div className="recipe-list">
           {recipes.length ? (
@@ -63,24 +77,52 @@ function MyRecipes() {
                 {editing && editing._id === r._id ? (
                   <>
                     <h3>Editing: {r.title}</h3>
+
                     <textarea
                       className="recipe-editor"
                       value={editedContent}
                       onChange={(e) => setEditedContent(e.target.value)}
                     />
+
                     <div className="recipe-actions">
-                      <button className="btn btn-primary" onClick={saveEdit}>Save</button>
-                      <button className="btn btn-secondary" onClick={cancelEdit}>Cancel</button>
+                      <button className="btn btn-primary" onClick={saveEdit}>
+                        Save
+                      </button>
+                      <button className="btn btn-secondary" onClick={cancelEdit}>
+                        Cancel
+                      </button>
                     </div>
                   </>
                 ) : (
                   <>
                     <h3>{r.title}</h3>
-                    <p><strong>Ingredients:</strong> {r.ingredients.join(', ')}</p>
-                    <ReactMarkdown>{r.editedContent || r.content}</ReactMarkdown>
+
+                    <h4>Ingredients</h4>
+                    <ul>
+                      {r.ingredients.map((i, idx) => (
+                        <li key={idx}>{i}</li>
+                      ))}
+                    </ul>
+
+                    <h4>Instructions</h4>
+                    <pre style={{ whiteSpace: "pre-wrap" }}>
+                      {r.editedContent || r.instructions}
+                    </pre>
+
                     <div className="recipe-actions">
-                      <button className="btn btn-primary" onClick={() => startEditing(r)}>Edit</button>
-                      <button className="btn btn-secondary" onClick={() => deleteRecipe(r._id)}>Delete</button>
+                      <button
+                        className="btn btn-primary"
+                        onClick={() => startEditing(r)}
+                      >
+                        Edit
+                      </button>
+
+                      <button
+                        className="btn btn-secondary"
+                        onClick={() => deleteRecipe(r._id)}
+                      >
+                        Delete
+                      </button>
                     </div>
                   </>
                 )}
